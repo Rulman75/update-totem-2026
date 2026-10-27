@@ -86,7 +86,7 @@ cd "${APP_DIR}/backend"
 npm install
 npx prisma generate
 pm2 delete totem-cmds-api >/dev/null 2>&1 || true
-pm2 start "npm run start" --name "totem-cmds-api"
+pm2 start npm --name "totem-cmds-api" --cwd "${APP_DIR}/backend" -- run start
 pm2 save
 
 cd "${APP_DIR}/frontend"
