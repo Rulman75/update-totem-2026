@@ -1,0 +1,36 @@
+{
+  "name": "totem-cmds-backend",
+  "version": "2.0.0",
+  "description": "Backend moderno para Portal Web Totem CMDS (Node.js + Express + TypeScript + Prisma + PostgreSQL)",
+  "main": "src/server.ts",
+  "scripts": {
+    "dev": "tsx watch --use-system-ca src/server.ts",
+    "start": "tsx --use-system-ca src/server.ts",
+    "db:push": "prisma db push",
+    "db:generate": "prisma generate",
+    "migrate:oracle": "tsx --use-system-ca scripts/migrate-oracle-and-csv.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.6",
+    "dotenv": "^16.4.5",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^2.2.0",
+    "nodemailer": "^6.9.15",
+    "pdfkit": "^0.15.2"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/multer": "^2.0.0",
+    "@types/node": "^22.0.0",
+    "@types/pdfkit": "^0.13.5",
+    "prisma": "^5.22.0",
+    "tsx": "^4.23.15",
+    "typescript": "^5.8.2"
+  }
+}

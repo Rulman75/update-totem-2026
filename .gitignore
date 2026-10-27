@@ -1,0 +1,30 @@
+# Dependencias
+node_modules/
+**/node_modules/
+
+# Compilados y cachés
+dist/
+**/dist/
+.vite/
+*.tsbuildinfo
+
+# Variables de entorno y secretos
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+# Volcados de Base de Datos y exportaciones con datos sensibles / pesados (>100MB)
+backend/data/oracle_export.json
+deploy-produccion/*.sql
+deploy-produccion/*.sql.gz
+*.dmp
+*.bak
+
+# Logs y archivos temporales del sistema
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db

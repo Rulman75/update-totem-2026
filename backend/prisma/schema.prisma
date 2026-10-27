@@ -1,0 +1,230 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// 1. Usuarios (Unifica ADM_TOTEM.TTM_USUARIOS + ADM_CMDS.OAUTH_USERS)
+model Usuario {
+  id              Int       @id @default(autoincrement())
+  rut             Int       @unique // RUT numérico sin DV (ej: 16954699)
+  dv              String    // Dígito verificador (ej: "1" o "K")
+  rutFmt          String    // Formato legible (ej: "16.954.699-1")
+  nombres         String?
+  apellidoPaterno String?
+  apellidoMaterno String?
+  nombreCompleto  String?
+  email           String?
+  telefono        String?
+  cargo           String?
+  unidad          String?
+  departamento    String?
+  passwordHash    String    // Soporta hash legado "MD5:<HEX32>" y bcrypt "$2a$..."
+  rol             String    @default("FUNCIONARIO") // "FUNCIONARIO" | "ADMIN"
+  bloqueado       Boolean   @default(false)         // usua_bloqueo == 'S'
+  esNuevo         Boolean   @default(true)          // usua_es_nuevo == 'S' (fuerza cambio de clave)
+  fechaIngreso    DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  modificadoPor   String?
+
+  @@index([rol])
+  @@index([apellidoPaterno, apellidoMaterno])
+}
+
+// 2. Catálogo de Preguntas de Seguridad (ADM_TOTEM.TTM_PREGUNTAS_PWS)
+model PreguntaSeguridad {
+  codigo   String  @id // prpw_cod ("1".."10")
+  pregunta String  // prpw_pregunta
+  activa   Boolean @default(true)
+
+  respuestas RespuestaSeguridad[]
+}
+
+// 3. Respuestas de Seguridad por Usuario (ADM_TOTEM.TTM_USUA_PREG_RESP)
+model RespuestaSeguridad {
+  id             Int      @id @default(autoincrement())
+  rut            Int      // usua_usuarios (RUT sin DV)
+  preguntaCodigo String   // prpw_cod
+  orden          Int      // uspr_orden (1, 2, 3)
+  respuestaHash  String   // MD5 legado (minúsculas de texto en mayúsculas) o bcrypt
+  fechaIngreso   DateTime @default(now())
+
+  pregunta PreguntaSeguridad @relation(fields: [preguntaCodigo], references: [codigo])
+
+  @@unique([rut, orden])
+  @@index([rut])
+}
+
+// 4. Tokens de Recuperación de Clave por Correo (Nuevo)
+model TokenRecuperacion {
+  id        Int      @id @default(autoincrement())
+  rut       Int
+  email     String
+  codigo    String
+  expiresAt DateTime
+  usado     Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([rut, codigo])
+}
+
+// 5. Procesos de Carga de Plantillas CSV (ADM_TOTEM.TTM_PROCESOS)
+model ProcesoCarga {
+  periodo         Int      @id // Ej: 202609
+  mes             Int      // Ej: 9
+  anio            Int      // Ej: 2026
+  periodoFmt      String   // Ej: "Septiembre 2026"
+  nomArchPersonal String?
+  nomArchRenta    String?
+  filasPersonal   Int      @default(0)
+  filasRenta      Int      @default(0)
+  estadoProceso   String   @default("PARCIAL") // "COMPLETADO", "PARCIAL", "PROCESANDO", "ERROR"
+  fechaCarga      DateTime @default(now())
+  cargadoPorRut   String?
+}
+
+// 6. Encabezado y Datos Personales/Contractuales por Período (ADM_TOTEM.TTM_PERSONAL - 68 columnas)
+model LiquidacionPersonal {
+  id               Int     @id @default(autoincrement())
+  periodo          Int     // proc_periodo (YYYYMM)
+  mes              Int
+  anio             Int
+  codSucursal      Int     // pers_cod_sucu (1=EDUCACION, 2=SALUD, 3=CASA CENTRAL, etc.)
+  nomSucursal      String  // pers_nom_sucu
+  codUnidad        Int     // pers_cod_unid (CENCO / Establecimiento)
+  nomUnidad        String  // pers_nom_unid
+  rut              Int     // pers_rut
+  dv               String  // pers_dv
+  rutFmt           String  // pers_rut_fmt
+  apePaterno       String  // pers_paterno
+  apeMaterno       String  // pers_materno
+  nombre           String  // pers_nombre
+  nombreFmt        String  // pers_nom_fmt (Nombre + Paterno + Materno)
+  sexo             String? // pers_sexo
+  fecNacimiento    String? // pers_fec_nac
+  edad             Int?    // pers_edad
+  detalleCont      String? // pers_detalle_cont ("INDEFINIDO", "PLAZO FIJO", etc.)
+  planta           String? // pers_planta
+  escala           String? // pers_escala (Nivel)
+  categoria        String? // pers_categoria
+  descripcionCargo String? // pers_descripcion (Cargo)
+  horas            Float?  // pers_horas
+  jornada          String? // jornada (Detalle jornada)
+  bienios          Int?    // pers_bienios
+  proxBienio       String? // pers_prox_bienio
+  grado            String? // pers_grado
+  letra            String? // pers_letra
+  inicioContrato   String? // pers_inicio (Fecha Ingreso CMDS)
+  terminoContrato  String? // pers_termino (Fecha Término Contrato)
+  antiguedad       String? // pers_antiguedad (Fecha Ingreso MINEDUC)
+  vigencia         String? // pers_vigencia
+  totNormal        Int     @default(0)
+  totInvalida      Int     @default(0)
+  totMaternal      Int     @default(0)
+  nroCargas        Int     @default(0) // pers_nro_carga
+  codAfp           String? // pers_e2
+  nomAfp           String? // pers_r2
+  porcAfp          String? // pers_porc
+  porcAdicional    String? // pers_porc_adicional
+  inva             String? // pers_inva
+  adminAfp         String? // pers_admin
+  rebaja           String? // pers_rebaja
+  codSalud         String? // pers_e1
+  nomSalud         String? // pers_r1
+  porcFijoSalud    String? // pers_porc_fijo
+  montoFijoSalud   String? // pers_monto_fijo
+  montoPesoSalud   String? // pers_monto_peso
+  porcAportePat    String? // pers_porc_aporte_pat
+  mtoAportePat     Int     @default(0)
+  totHaberes       Int     @default(0) // pers_tot_haberes
+  totDesctos       Int     @default(0) // pers_tot_desctos
+  sdoImponib       Int     @default(0) // pers_sdo_imponib
+  montoImponi      Int     @default(0) // pers_monto_imponi (Renta Imponible)
+  mtoCotiza        Int     @default(0) // pers_mto_cotiza
+  mtoAdic          Int     @default(0) // pers_mto_adic
+  mtoSalud         Int     @default(0) // pers_mto_salud
+  tributa          Int     @default(0) // pers_tributa (Renta Tributable)
+  liquidoPago      Int     @default(0) // pers_liquido_a_pago (totHaberes - totDesctos)
+  diasTrab         Float   @default(30) // pers_dias_trab
+  mtoPorcen        Int     @default(0)
+  cesEmpleado      Int     @default(0)
+  cesEmpleador     Int     @default(0)
+  invEmpleador     Int     @default(0)
+  direccion        String? // pers_direccion
+  telefono         String? // pers_telefono
+  nacionalidad     String? // pers_nacionalidad
+  estadoCivil      String? // pers_estado_civil
+  formaPago        String? // pers_forma_pago
+  nroCuenta        String? // pers_nro_cuenta
+  razonSocialBanco String? // pers_razon_social
+  escolaridad      String? // pers_escolaridad
+  codTitulo        String? // pers_cod_t
+  descTitulo       String? // pers_desc_titulo
+  codEspec         String? // pers_cod_e
+  descEspec        String? // pers_desc_espec
+
+  @@index([rut, periodo])
+  @@index([periodo])
+}
+
+// 7. Detalle de Haberes y Descuentos por Período (ADM_TOTEM.TTM_RENTA - 14 columnas)
+model LiquidacionRenta {
+  id             Int     @id @default(autoincrement())
+  periodo        Int     // proc_periodo (YYYYMM)
+  codUnidad      Int     // pers_cod_unid
+  rut            Int     // pers_rut
+  dv             String  // pers_dv
+  paterno        String?
+  materno        String?
+  nombre         String?
+  codHaber       Int     @default(0) // rnta_cod_haber
+  nomHaber       String? // rnta_nom_haber
+  montoHaber     Int     @default(0) // rnta_monto_haber
+  codDescuento   Int     @default(0) // rnta_cod_dscto
+  nomDescuento   String? // rnta_nom_dscto
+  montoDescuento Int     @default(0) // rnta_monto_dscto
+  mes            Int
+  anio           Int
+
+  @@index([rut, periodo])
+  @@index([periodo])
+}
+
+// 8. Mensajes de Contacto / Soporte RRHH (ADM_TOTEM.TTM_ENVIO_MENSAJES)
+model MensajeContacto {
+  id            Int       @id @default(autoincrement())
+  rut           Int       // usua_usuarios
+  rutFmt        String?
+  nombreUsuario String
+  email         String
+  mensaje       String
+  estado        String    @default("PENDIENTE") // "PENDIENTE" | "LEIDO"
+  fechaEnvio    DateTime  @default(now())
+  fechaMod      DateTime?
+  usuarioMod    String?
+
+  @@index([rut])
+  @@index([estado])
+  @@index([fechaEnvio])
+}
+
+// 9. Registro de Auditoría (Nuevo)
+model AuditLog {
+  id            Int      @id @default(autoincrement())
+  accion        String   // LOGIN, CAMBIO_CLAVE, DESCARGA_LIQUIDACION, DESCARGA_CERT_ANTIGUEDAD, DESCARGA_DOC_SLEP, CARGA_PLANTILLA, etc.
+  entidad       String   // Auth, Liquidacion, Certificado, Plantilla, Usuario, Mensaje
+  rutUsuario    String
+  nombreUsuario String?
+  rolUsuario    String
+  ip            String
+  userAgent     String
+  detalles      String   // JSON string
+  fecha         DateTime @default(now())
+
+  @@index([rutUsuario])
+  @@index([accion])
+  @@index([fecha])
+}
