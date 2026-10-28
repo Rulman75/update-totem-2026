@@ -7,7 +7,7 @@ Modernización integral del Portal de Autoatención y Gestión de Recursos Human
 ## Características Principales
 
 ### 1. Portal de Autoatención del Funcionario
-* **Autenticación Flexible por RUT**: Soporta ingreso de RUT sin puntos ni guión (`106334471`), solo cuerpo (`10633447`) o con formato (`10.633.447-1`), con actualización transparente de contraseñas legadas (`MD5`) a `bcrypt`.
+* **Autenticación por RUT**: Ingreso de RUT sin puntos ni guión (ej: `12.345.678-9` como `123456789`), con actualización transparente de contraseñas legadas (`MD5`) a `bcrypt`.
 * **Liquidaciones de Sueldo — Ventana Histórica de 5 Años Móviles (`2022`–`2026`)**:
   * Selector rápido por año (`2026`, `2025`, `2024`, `2023`, `2022` y vista consolidada `Todos`).
   * **Vista de Tarjetones Mensuales** y **Vista de Tabla Compacta** intercambiables.

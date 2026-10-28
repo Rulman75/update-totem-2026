@@ -378,11 +378,11 @@ export function App() {
                   required
                   value={rutLogin}
                   onChange={(e) => setRutLogin(e.target.value)}
-                  placeholder="Ej: 106334471 o 10633447-1"
+                  placeholder="Ej: 123456789"
                   className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#016098] focus:bg-white transition shadow-sm text-gray-800 font-medium"
                 />
                 <p className="text-xs text-gray-400 mt-1.5">
-                  Sin puntos ni guión (ej: 106334471), solo cuerpo (10633447) o con guión.
+                  Ingrese su RUT sin puntos ni guión (ej: 12.345.678-9 como 123456789).
                 </p>
               </div>
 
@@ -484,7 +484,7 @@ export function App() {
                         required
                         value={rutRecuperar}
                         onChange={(e) => setRutRecuperar(e.target.value)}
-                        placeholder="Ej: 106334471 o 10633447-1"
+                        placeholder="Ej: 123456789"
                         className="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#016098]"
                       />
                     </div>

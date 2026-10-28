@@ -1169,7 +1169,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ activeSubTab, onSelectSu
                     required
                     value={nuevoUserForm.rut}
                     onChange={(e) => setNuevoUserForm({ ...nuevoUserForm, rut: e.target.value })}
-                    placeholder="Ej: 106334471"
+                    placeholder="Ej: 123456789"
                     className="w-full rounded-lg border px-3 py-2 text-sm"
                   />
                 </div>
