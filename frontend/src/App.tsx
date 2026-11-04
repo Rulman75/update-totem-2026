@@ -325,71 +325,119 @@ export function App() {
   }
 
   // ==========================================================================
-  // PANTALLA DE LOGIN (ESTILO CORPORATIVO CMDS SPLIT-SCREEN)
+  // PANTALLA DE LOGIN (ESTILO LICENCIAS MÉDICAS CMDS - TARJETA CENTRAL)
   // ==========================================================================
   if (!user) {
     return (
-      <div className="flex h-screen w-full bg-gray-50">
-        {/* Panel Izquierdo Corporativo (Logo y Branding CMDS) */}
-        <div className="hidden md:flex flex-col justify-center items-center w-1/2 bg-[#016098] text-white p-12 shadow-[10px_0_15px_-3px_rgba(0,0,0,0.1)] z-10">
-          <div className="bg-white p-6 rounded-2xl shadow-xl mb-8">
-            <img src="/logo.png" alt="CMDS Logo" className="w-48 h-48 object-contain" />
-          </div>
-          <h1 className="text-4xl font-extrabold tracking-wider text-yellow-400 mb-4 text-center">
-            CMDS
-          </h1>
-          <h2 className="text-xl font-semibold text-blue-200 tracking-wide text-center">
-            Portal de Autoatención y Gestión de
-          </h2>
-          <h2 className="text-2xl font-bold text-white uppercase mt-2 tracking-widest text-center">
-            Remuneraciones y Certificados
-          </h2>
-          <div className="mt-5">
-            <span
-              title={VERSION_TOOLTIP}
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-white/15 text-blue-50 border border-white/20 shadow-sm tracking-wide"
-            >
-              Versión {VERSION_DISPLAY}
-            </span>
-          </div>
-          <div className="mt-10 w-16 h-1 bg-yellow-400 rounded"></div>
-        </div>
+      <div className="min-h-screen bg-[#f4f7f6] flex flex-col justify-center items-center p-4">
+        <div className="max-w-4xl w-full bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col md:flex-row border border-gray-100">
+          {/* Lado Izquierdo: Corporativo CMDS */}
+          <div className="md:w-1/2 bg-[#016098] text-white p-10 flex flex-col justify-between items-center text-center relative overflow-hidden">
+            {/* Círculos decorativos de fondo */}
+            <div className="absolute -top-20 -left-20 w-64 h-64 rounded-full bg-white opacity-5"></div>
+            <div className="absolute -bottom-20 -right-20 w-80 h-80 rounded-full bg-[#39BABD] opacity-20"></div>
 
-        {/* Panel Derecho (Formulario de Login) */}
-        <div className="flex flex-col justify-center items-center w-full md:w-1/2 bg-white px-6">
-          <div className="w-full max-w-md">
-            {/* Logo visible solo en mobile */}
-            <div className="md:hidden flex justify-center mb-8">
-              <img src="/logo.png" alt="CMDS Logo" className="w-32 h-32 object-contain" />
+            <div className="z-10 mt-6">
+              <img
+                src="/logo.png"
+                alt="Logo CMDS"
+                className="w-36 h-auto mx-auto mb-6 bg-white p-3 rounded-xl shadow-md"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = 'none';
+                }}
+              />
+              <h1 className="text-3xl font-extrabold tracking-tight mb-2 text-yellow-400">CMDS</h1>
+              <h2 className="text-lg font-medium text-blue-100">
+                Corporación Municipal de Desarrollo Social
+              </h2>
             </div>
 
-            <h3 className="text-3xl font-bold text-[#016098] mb-2">Bienvenido</h3>
-            <p className="text-gray-500 mb-8">Ingresa tus credenciales para continuar</p>
+            <div className="z-10 my-8">
+              <p className="text-base text-blue-50 leading-relaxed font-semibold">
+                Portal de Autoatención del Funcionario
+                <br />
+                Liquidaciones y Certificados
+              </p>
+              <p className="text-xs text-blue-200 mt-2">
+                Consulta Histórica de Remuneraciones, Certificados de Antigüedad y Atención RRHH
+              </p>
+              <div className="mt-4">
+                <span
+                  title={VERSION_TOOLTIP}
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-white/15 text-blue-50 border border-white/20 shadow-sm tracking-wide"
+                >
+                  Versión {VERSION_DISPLAY}
+                </span>
+              </div>
+            </div>
+
+            <div className="z-10 text-xs text-blue-200 space-y-1">
+              <div>
+                &copy; {new Date().getFullYear()} CMDS Antofagasta. Todos los derechos reservados.
+              </div>
+            </div>
+          </div>
+
+          {/* Lado Derecho: Formulario */}
+          <div className="md:w-1/2 p-10 md:p-12 flex flex-col justify-center bg-white">
+            <div className="mb-8 text-center md:text-left">
+              <h2 className="text-2xl font-bold text-[#1e293b] mb-2">Bienvenido</h2>
+              <p className="text-sm text-[#64748b]">
+                Ingrese sus credenciales para acceder al Portal del Funcionario
+              </p>
+            </div>
 
             {errorLogin && (
-              <div className="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded mb-6 shadow-sm flex items-center gap-3 font-semibold text-sm">
-                <AlertCircle className="w-5 h-5 shrink-0 text-red-600" />
-                <span>{errorLogin}</span>
+              <div className="mb-6 bg-[#EB567F]/10 border-l-4 border-[#EB567F] p-4 rounded-md">
+                <div className="flex">
+                  <div className="flex-shrink-0">
+                    <svg className="h-5 w-5 text-[#EB567F]" viewBox="0 0 20 20" fill="currentColor">
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                  <div className="ml-3">
+                    <p className="text-sm text-[#EB567F] font-medium">{errorLogin}</p>
+                  </div>
+                </div>
               </div>
             )}
 
             <form onSubmit={handleLogin} className="space-y-6">
               <div>
-                <label
-                  className="block text-[#016098] text-sm font-bold mb-2 uppercase tracking-wide"
-                  htmlFor="rutLogin"
-                >
+                <label className="block text-sm font-medium text-[#1e293b] mb-2" htmlFor="rutLogin">
                   RUT Funcionario(a)
                 </label>
-                <input
-                  id="rutLogin"
-                  type="text"
-                  required
-                  value={rutLogin}
-                  onChange={(e) => setRutLogin(e.target.value)}
-                  placeholder="Ej: 123456789"
-                  className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#016098] focus:bg-white transition shadow-sm text-gray-800 font-medium"
-                />
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg
+                      className="h-5 w-5 text-gray-400"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                      />
+                    </svg>
+                  </div>
+                  <input
+                    id="rutLogin"
+                    type="text"
+                    required
+                    value={rutLogin}
+                    onChange={(e) => setRutLogin(e.target.value)}
+                    className="pl-10 w-full px-4 py-3 bg-[#f8fafc] border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#016098] focus:bg-white transition-colors text-[#1e293b]"
+                    placeholder="Ej: 123456789"
+                    disabled={submittingLogin}
+                  />
+                </div>
                 <p className="text-xs text-gray-400 mt-1.5">
                   Ingrese su RUT sin puntos ni guión (ej: 12.345.678-9 como 123456789).
                 </p>
@@ -397,40 +445,80 @@ export function App() {
 
               <div>
                 <label
-                  className="block text-[#016098] text-sm font-bold mb-2 uppercase tracking-wide"
+                  className="block text-sm font-medium text-[#1e293b] mb-2"
                   htmlFor="passwordLogin"
                 >
                   Contraseña
                 </label>
-                <input
-                  id="passwordLogin"
-                  type="password"
-                  required
-                  value={passwordLogin}
-                  onChange={(e) => setPasswordLogin(e.target.value)}
-                  placeholder="••••••••"
-                  className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#016098] focus:bg-white transition shadow-sm text-gray-800 font-medium"
-                />
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg
+                      className="h-5 w-5 text-gray-400"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                      />
+                    </svg>
+                  </div>
+                  <input
+                    id="passwordLogin"
+                    type="password"
+                    required
+                    value={passwordLogin}
+                    onChange={(e) => setPasswordLogin(e.target.value)}
+                    className="pl-10 w-full px-4 py-3 bg-[#f8fafc] border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#016098] focus:bg-white transition-colors text-[#1e293b]"
+                    placeholder="••••••••"
+                    disabled={submittingLogin}
+                  />
+                </div>
               </div>
 
-              <button
-                type="submit"
-                disabled={submittingLogin}
-                className="w-full bg-[#016098] hover:bg-[#024a8d] disabled:opacity-70 text-white font-bold py-3 px-4 rounded-lg transition duration-200 shadow-lg mt-4 flex justify-center items-center gap-2"
-              >
-                {submittingLogin ? 'Verificando credenciales...' : 'Ingresar al Sistema'}
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M14 5l7 7m0 0l-7 7m7-7H3"
-                  />
-                </svg>
-              </button>
+              <div className="pt-2">
+                <button
+                  type="submit"
+                  disabled={submittingLogin}
+                  className={`w-full py-3 px-4 bg-[#016098] hover:bg-[#024a8d] text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition duration-200 flex justify-center items-center ${
+                    submittingLogin ? 'opacity-70 cursor-not-allowed' : ''
+                  }`}
+                >
+                  {submittingLogin ? (
+                    <>
+                      <svg
+                        className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                      Verificando...
+                    </>
+                  ) : (
+                    'Iniciar Sesión'
+                  )}
+                </button>
+              </div>
             </form>
 
-            <div className="mt-6 text-center">
+            <div className="mt-5 text-center">
               <button
                 type="button"
                 onClick={() => {
@@ -439,22 +527,16 @@ export function App() {
                   setMsgRecuperar(null);
                   setRutRecuperar(rutLogin);
                 }}
-                className="text-xs font-bold text-[#016098] hover:underline inline-flex items-center gap-1.5"
+                className="text-xs font-semibold text-[#016098] hover:underline inline-flex items-center gap-1.5"
               >
                 <HelpCircle className="w-4 h-4" />
                 ¿Olvidaste tu contraseña? Recupérala con tus preguntas de seguridad
               </button>
             </div>
 
-            <div className="mt-8 pt-6 border-t border-gray-200 text-center space-y-1">
-              <p className="text-xs text-gray-400 font-semibold">
-                &copy; 2026 CMDS - Corporación Municipal de Desarrollo Social de Antofagasta
-              </p>
-              <p
-                title={VERSION_TOOLTIP}
-                className="text-[11px] text-[#016098] font-semibold tracking-wide"
-              >
-                Versión {VERSION_DISPLAY}
+            <div className="mt-6 border-t border-gray-100 pt-5 text-center">
+              <p className="text-xs text-gray-400">
+                Departamento de Recursos Humanos — CMDS Antofagasta
               </p>
             </div>
           </div>
