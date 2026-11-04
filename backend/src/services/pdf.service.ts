@@ -131,7 +131,7 @@ export async function generarPdfLiquidacion(
       // 1. Encabezado Corporativo + RUT CMDS (71.102.600-2)
       if (fs.existsSync(logoPath)) {
         try {
-          doc.image(logoPath, 30, 22, { width: 56 });
+          doc.image(logoPath, 34, 15, { width: 52 });
         } catch {
           // continuar sin imagen si hay error de formato
         }
@@ -141,39 +141,35 @@ export async function generarPdfLiquidacion(
         .font('Helvetica-Bold')
         .fontSize(6.8)
         .fillColor('#016098')
-        .text('R.U.T.: 71.102.600-2', 26, 63, { width: 70, align: 'center' });
+        .text('R.U.T.: 71.102.600-2', 24, 66, { width: 72, align: 'center' });
 
       doc
         .font('Helvetica-Bold')
         .fontSize(9)
         .fillColor('#0f172a')
-        .text('CORPORACIÓN MUNICIPAL DE DESARROLLO SOCIAL', 100, 26)
-        .font('Helvetica-Bold')
-        .fontSize(8)
-        .fillColor('#016098')
-        .text('R.U.T.: 71.102.600-2', 100, 37)
+        .text('CORPORACIÓN MUNICIPAL DE DESARROLLO SOCIAL', 102, 26)
         .font('Helvetica')
         .fontSize(7.8)
         .fillColor('#334155')
-        .text('DIRECCIÓN DE RECURSOS HUMANOS - ANTOFAGASTA', 100, 48)
-        .text(`DEPARTAMENTO: ${personal.nomSucursal || 'CMDS'}`, 100, 58);
+        .text('DIRECCIÓN DE RECURSOS HUMANOS - ANTOFAGASTA', 102, 40)
+        .text(`DEPARTAMENTO: ${personal.nomSucursal || 'CMDS'}`, 102, 52);
 
       const mesNombre = (MESES_NOMBRES[personal.mes] || `MES ${personal.mes}`).toUpperCase();
       doc
-        .roundedRect(390, 26, 192, 40, 4)
+        .roundedRect(390, 24, 192, 42, 4)
         .fillAndStroke('#f1f5f9', '#cbd5e1');
 
       doc
         .font('Helvetica-Bold')
         .fontSize(10)
         .fillColor('#0f172a')
-        .text('LIQUIDACIÓN DE SUELDO', 390, 33, { width: 192, align: 'center' })
+        .text('LIQUIDACIÓN DE SUELDO', 390, 32, { width: 192, align: 'center' })
         .fontSize(9)
         .fillColor('#1d4ed8')
-        .text(`${mesNombre} DE ${personal.anio}`, 390, 48, { width: 192, align: 'center' });
+        .text(`${mesNombre} DE ${personal.anio}`, 390, 47, { width: 192, align: 'center' });
 
       // 2. Bloque de Datos Personales y Contractuales
-      const infoTop = 76;
+      const infoTop = 82;
       doc
         .roundedRect(28, infoTop, 556, 86, 4)
         .fillAndStroke('#ffffff', '#94a3b8');
@@ -233,7 +229,7 @@ export async function generarPdfLiquidacion(
       drawField('BANCO / N° CUENTA', `${personal.razonSocialBanco || ''} ${personal.nroCuenta || ''}`.trim() || '-', 375, infoTop + 55, 200);
 
       // 3. Franja Previsional y Tributaria
-      const prevTop = 168;
+      const prevTop = 174;
       doc
         .roundedRect(28, prevTop, 556, 32, 4)
         .fillAndStroke('#f8fafc', '#94a3b8');
@@ -258,8 +254,8 @@ export async function generarPdfLiquidacion(
       drawField('RENTA TRIBUTABLE', `$ ${fmtPesos(personal.tributa)}`, 514, prevTop + 6, 66);
 
       // 4. Tabla de Haberes y Descuentos (Dos columnas paralelas)
-      const tableTop = 208;
-      const tableHeight = 420;
+      const tableTop = 213;
+      const tableHeight = 415;
       const colWidth = 275;
       const leftX = 28;
       const rightX = 309;
@@ -415,7 +411,7 @@ export async function generarPdfCertificadoAntiguedad(
 
       if (fs.existsSync(logoPath)) {
         try {
-          doc.image(logoPath, 65, 45, { width: 85 });
+          doc.image(logoPath, 65, 42, { width: 85 });
         } catch {
           // continuar sin imagen
         }
@@ -424,8 +420,8 @@ export async function generarPdfCertificadoAntiguedad(
       doc
         .font('Helvetica-Bold')
         .fontSize(7.5)
-        .fillColor('#334155')
-        .text('R.U.T.: 71.102.600-2', 65, 92, { width: 85, align: 'center' });
+        .fillColor('#016098')
+        .text('R.U.T.: 71.102.600-2', 65, 120, { width: 85, align: 'center' });
 
       const hoy = new Date();
       const dia = hoy.getDate();

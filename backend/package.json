@@ -1,6 +1,6 @@
 {
   "name": "totem-cmds-backend",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "Backend moderno para Portal Web Totem CMDS (Node.js + Express + TypeScript + Prisma + PostgreSQL)",
   "main": "src/server.ts",
   "scripts": {

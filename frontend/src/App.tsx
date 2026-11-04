@@ -1855,7 +1855,7 @@ export function App() {
               <div className="flex items-center gap-3.5">
                 <div className="bg-white rounded-xl px-2.5 py-1.5 flex flex-col items-center shrink-0 shadow-sm">
                   <img src="/logo.png" alt="CMDS" className="h-7 w-auto object-contain" />
-                  <span className="text-[9px] font-bold text-slate-700 tracking-tight mt-0.5">
+                  <span className="text-[9px] font-bold text-[#016098] tracking-tight mt-1.5">
                     R.U.T.: 71.102.600-2
                   </span>
                 </div>
