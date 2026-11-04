@@ -259,7 +259,7 @@ export async function generarPdfLiquidacion(
 
       // 4. Tabla de Haberes y Descuentos (Dos columnas paralelas)
       const tableTop = 208;
-      const tableHeight = 355;
+      const tableHeight = 420;
       const colWidth = 275;
       const leftX = 28;
       const rightX = 309;
@@ -293,8 +293,8 @@ export async function generarPdfLiquidacion(
         .filter((r) => (r.codDescuento && r.codDescuento > 0) || (r.montoDescuento && r.montoDescuento > 0))
         .sort((a, b) => a.codDescuento - b.codDescuento);
 
-      const maxRows = 27;
-      const rowH = 11.8;
+      const maxRows = 31;
+      const rowH = 12.2;
 
       doc.font('Helvetica').fontSize(7.2).fillColor('#0f172a');
 
@@ -321,79 +321,55 @@ export async function generarPdfLiquidacion(
       });
 
       // 5. Resumen de Totales y Alcance Líquido
-      const totTop = 570;
+      const totTop = 636;
       doc
-        .roundedRect(28, totTop, 556, 60, 4)
+        .roundedRect(28, totTop, 556, 64, 4)
         .fillAndStroke('#f8fafc', '#64748b');
 
       doc
         .font('Helvetica-Bold')
         .fontSize(8.5)
         .fillColor('#0f172a')
-        .text('TOTAL HABERES:', 38, totTop + 9)
-        .text(`$ ${fmtPesos(personal.totHaberes)}`, 140, totTop + 9, { width: 140, align: 'right' });
+        .text('TOTAL HABERES:', 38, totTop + 10)
+        .text(`$ ${fmtPesos(personal.totHaberes)}`, 140, totTop + 10, { width: 140, align: 'right' });
 
       doc
-        .text('TOTAL DESCUENTOS:', 318, totTop + 9)
-        .text(`$ ${fmtPesos(personal.totDesctos)}`, 430, totTop + 9, { width: 140, align: 'right' });
+        .text('TOTAL DESCUENTOS:', 318, totTop + 10)
+        .text(`$ ${fmtPesos(personal.totDesctos)}`, 430, totTop + 10, { width: 140, align: 'right' });
 
-      doc.moveTo(36, totTop + 25).lineTo(576, totTop + 25).strokeColor('#cbd5e1').stroke();
+      doc.moveTo(36, totTop + 26).lineTo(576, totTop + 26).strokeColor('#cbd5e1').stroke();
 
       // Alcance Líquido destacado
       doc
-        .roundedRect(390, totTop + 30, 186, 24, 4)
+        .roundedRect(390, totTop + 32, 186, 26, 4)
         .fill('#016098');
 
       doc
         .font('Helvetica-Bold')
         .fontSize(9.5)
         .fillColor('#ffffff')
-        .text('LÍQUIDO A PAGO:', 398, totTop + 37)
-        .text(`$ ${fmtPesos(personal.liquidoPago)}`, 480, totTop + 37, { width: 90, align: 'right' });
+        .text('LÍQUIDO A PAGO:', 398, totTop + 40)
+        .text(`$ ${fmtPesos(personal.liquidoPago)}`, 480, totTop + 40, { width: 90, align: 'right' });
 
       const enLetras = numeroALetras(personal.liquidoPago);
       doc
         .font('Helvetica-Bold')
         .fontSize(7.2)
         .fillColor('#334155')
-        .text(`SON: ${enLetras} PESOS.-`, 38, totTop + 35, { width: 345 });
+        .text(`SON: ${enLetras} PESOS.-`, 38, totTop + 36, { width: 345 });
 
-      // 6. Pie de firma (JEFE DE REMUNERACIONES) y certificación
-      const footTop = 640;
+      // 6. Pie de certificación de liquidación (sin firma)
+      const footTop = 710;
       doc
         .font('Helvetica')
-        .fontSize(7)
+        .fontSize(6.8)
         .fillColor('#475569')
         .text(
           'Certifico que he recibido de la Corporación Municipal de Desarrollo Social de Antofagasta (R.U.T. 71.102.600-2), a mi entera satisfacción, el saldo líquido indicado en la presente liquidación, sin tener cargo ni cobro posterior alguno que hacer por los conceptos señalados.',
           28,
-          footTop + 25,
-          { width: 330, align: 'justify' }
+          footTop,
+          { width: 556, align: 'justify' }
         );
-
-      // Bloque Firma Jefe de Remuneraciones a la derecha
-      if (fs.existsSync(firmaPath)) {
-        try {
-          doc.image(firmaPath, 418, footTop - 4, { width: 120 });
-        } catch {
-          // continuar sin imagen
-        }
-      }
-
-      doc.moveTo(385, footTop + 68).lineTo(575, footTop + 68).strokeColor('#334155').stroke();
-
-      doc
-        .font('Helvetica-Bold')
-        .fontSize(8)
-        .fillColor('#0f172a')
-        .text('JEFE DE REMUNERACIONES', 375, footTop + 72, { width: 205, align: 'center' })
-        .font('Helvetica')
-        .fontSize(6.8)
-        .fillColor('#475569')
-        .text('CORPORACIÓN MUNICIPAL DE DESARROLLO SOCIAL', 375, footTop + 83, {
-          width: 205,
-          align: 'center',
-        });
 
       doc
         .font('Helvetica-Oblique')
@@ -402,7 +378,7 @@ export async function generarPdfLiquidacion(
         .text(
           `Documento emitido electrónicamente a través del Portal del Funcionario CMDS el ${new Date().toLocaleString('es-CL')}.`,
           28,
-          742,
+          footTop + 26,
           { width: 556, align: 'center' }
         );
 
@@ -444,6 +420,12 @@ export async function generarPdfCertificadoAntiguedad(
           // continuar sin imagen
         }
       }
+
+      doc
+        .font('Helvetica-Bold')
+        .fontSize(7.5)
+        .fillColor('#334155')
+        .text('R.U.T.: 71.102.600-2', 65, 92, { width: 85, align: 'center' });
 
       const hoy = new Date();
       const dia = hoy.getDate();
@@ -494,7 +476,7 @@ export async function generarPdfCertificadoAntiguedad(
 
         const parrafo =
           index === 0
-            ? `La Jefe del Departamento de Recursos Humanos de la Corporación Municipal de Desarrollo Social de Antofagasta, certifica que el(la) funcionario(a) Don(ña) ${c.nombreFmt}, Cédula Nacional de Identidad Nº ${c.rutFmt}, presta servicios en esta Corporación en calidad de ${calidad}, ${tramoFechas}, desempeñándose actualmente en ${c.nomUnidad} en el cargo de ${c.descripcionCargo || 'FUNCIONARIO(A)'}, con una jornada de ${c.horas ?? 0} horas cronológicas semanales.`
+            ? `Jefe de Remuneraciones de la Corporación Municipal de Desarrollo Social de Antofagasta, certifica que el(la) funcionario(a) Don(ña) ${c.nombreFmt}, Cédula Nacional de Identidad Nº ${c.rutFmt}, presta servicios en esta Corporación en calidad de ${calidad}, ${tramoFechas}, desempeñándose actualmente en ${c.nomUnidad} en el cargo de ${c.descripcionCargo || 'FUNCIONARIO(A)'}, con una jornada de ${c.horas ?? 0} horas cronológicas semanales.`
             : `Asimismo, registra contrato en calidad de ${calidad}, ${tramoFechas}, desempeñándose en ${c.nomUnidad} en el cargo de ${c.descripcionCargo || 'FUNCIONARIO(A)'}, con una jornada de ${c.horas ?? 0} horas cronológicas semanales.`;
 
         doc
@@ -520,7 +502,7 @@ export async function generarPdfCertificadoAntiguedad(
           }
         );
 
-      // Firma Oficial RRHH
+      // Firma Oficial Jefe de Remuneraciones
       const firmaTop = 470;
       if (fs.existsSync(firmaPath)) {
         try {
@@ -534,7 +516,7 @@ export async function generarPdfCertificadoAntiguedad(
         .font('Helvetica-Bold')
         .fontSize(10)
         .fillColor('#0f172a')
-        .text('JEFE DEPARTAMENTO DE RECURSOS HUMANOS', 65, firmaTop + 115, {
+        .text('JEFE DE REMUNERACIONES', 65, firmaTop + 115, {
           align: 'center',
         })
         .text('CORPORACIÓN MUNICIPAL DE DESARROLLO SOCIAL DE ANTOFAGASTA', 65, firmaTop + 130, {

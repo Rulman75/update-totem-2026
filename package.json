@@ -1,6 +1,6 @@
 {
   "name": "totem-cmds-portal",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "private": true,
   "description": "Portal del Funcionario - Totem Web CMDS Antofagasta",
   "scripts": {

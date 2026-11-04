@@ -1420,7 +1420,7 @@ export function App() {
                         Certificado de Antigüedad Laboral CMDS
                       </h3>
                       <p className="text-xs text-slate-600 leading-relaxed">
-                        Documento oficial firmado por la Jefatura del Departamento de Recursos Humanos de la Corporación Municipal de Desarrollo Social de Antofagasta, que acredita su fecha de ingreso, calidad contractual, establecimiento, cargo y carga horaria vigente.
+                        Documento oficial firmado por el Jefe de Remuneraciones de la Corporación Municipal de Desarrollo Social de Antofagasta, que acredita su fecha de ingreso, calidad contractual, establecimiento, cargo y carga horaria vigente.
                       </p>
 
                       {infoAntiguedad && infoAntiguedad.contratos?.length > 0 && (
@@ -1993,21 +1993,15 @@ export function App() {
                   </div>
                 </div>
 
-                {/* Pie de firma y certificación */}
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-3 border-t border-slate-200 text-[11px] text-slate-500">
-                  <p className="max-w-md leading-relaxed">
+                {/* Pie de certificación */}
+                <div className="pt-3 border-t border-slate-200 text-[11px] text-slate-500">
+                  <p className="leading-relaxed">
                     Certifico que he recibido de la{' '}
                     <strong className="text-slate-700">
                       Corporación Municipal de Desarrollo Social de Antofagasta (R.U.T. 71.102.600-2)
                     </strong>{' '}
-                    a mi entera satisfacción el saldo líquido indicado en la presente liquidación.
+                    a mi entera satisfacción el saldo líquido indicado en la presente liquidación, sin tener cargo ni cobro posterior alguno que hacer por los conceptos señalados.
                   </p>
-                  <div className="text-center shrink-0 px-6 pt-3 border-t border-slate-400">
-                    <p className="font-bold text-slate-800 tracking-wide">JEFE DE REMUNERACIONES</p>
-                    <p className="text-[10px] text-slate-500">
-                      CORPORACIÓN MUNICIPAL DE DESARROLLO SOCIAL
-                    </p>
-                  </div>
                 </div>
               </div>
             )}
