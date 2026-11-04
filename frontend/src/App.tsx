@@ -32,6 +32,7 @@ import {
 } from 'lucide-react';
 import { api, getPdfDownloadUrl } from './api';
 import { AdminPanel, AdminSubTab } from './components/AdminPanel';
+import { VERSION_DISPLAY, VERSION_TOOLTIP } from './version';
 
 export function App() {
   const [user, setUser] = useState<any | null>(null);
@@ -343,7 +344,15 @@ export function App() {
           <h2 className="text-2xl font-bold text-white uppercase mt-2 tracking-widest text-center">
             Remuneraciones y Certificados
           </h2>
-          <div className="mt-12 w-16 h-1 bg-yellow-400 rounded"></div>
+          <div className="mt-5">
+            <span
+              title={VERSION_TOOLTIP}
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-white/15 text-blue-50 border border-white/20 shadow-sm tracking-wide"
+            >
+              Versión {VERSION_DISPLAY}
+            </span>
+          </div>
+          <div className="mt-10 w-16 h-1 bg-yellow-400 rounded"></div>
         </div>
 
         {/* Panel Derecho (Formulario de Login) */}
@@ -437,9 +446,15 @@ export function App() {
               </button>
             </div>
 
-            <div className="mt-8 pt-6 border-t border-gray-200 text-center">
+            <div className="mt-8 pt-6 border-t border-gray-200 text-center space-y-1">
               <p className="text-xs text-gray-400 font-semibold">
                 &copy; 2026 CMDS - Corporación Municipal de Desarrollo Social de Antofagasta
+              </p>
+              <p
+                title={VERSION_TOOLTIP}
+                className="text-[11px] text-[#016098] font-semibold tracking-wide"
+              >
+                Versión {VERSION_DISPLAY}
               </p>
             </div>
           </div>
@@ -652,6 +667,12 @@ export function App() {
             Portal del Funcionario
             <br />
             <span className="text-xs text-[#016098] font-bold">Totem Web CMDS</span>
+          </span>
+          <span
+            title={VERSION_TOOLTIP}
+            className="mt-2 inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-[#e0f2fe] text-[#016098] border border-blue-200 tracking-wider"
+          >
+            Versión {VERSION_DISPLAY}
           </span>
 
           <div className="flex flex-col items-center mt-4 text-center w-full">
