@@ -126,11 +126,12 @@ export async function generarPdfLiquidacion(
 
       const assetsDir = path.join(__dirname, '../../assets');
       const logoPath = path.join(assetsDir, 'logocmns.png');
+      const firmaPath = path.join(assetsDir, 'firma_gcuevas.png');
 
-      // 1. Encabezado Corporativo
+      // 1. Encabezado Corporativo + RUT CMDS (71.102.600-2)
       if (fs.existsSync(logoPath)) {
         try {
-          doc.image(logoPath, 30, 24, { width: 62 });
+          doc.image(logoPath, 30, 22, { width: 56 });
         } catch {
           // continuar sin imagen si hay error de formato
         }
@@ -138,14 +139,24 @@ export async function generarPdfLiquidacion(
 
       doc
         .font('Helvetica-Bold')
+        .fontSize(6.8)
+        .fillColor('#016098')
+        .text('R.U.T.: 71.102.600-2', 26, 63, { width: 70, align: 'center' });
+
+      doc
+        .font('Helvetica-Bold')
         .fontSize(9)
         .fillColor('#0f172a')
-        .text('CORPORACIÓN MUNICIPAL DE DESARROLLO SOCIAL', 100, 30)
-        .font('Helvetica')
+        .text('CORPORACIÓN MUNICIPAL DE DESARROLLO SOCIAL', 100, 26)
+        .font('Helvetica-Bold')
         .fontSize(8)
+        .fillColor('#016098')
+        .text('R.U.T.: 71.102.600-2', 100, 37)
+        .font('Helvetica')
+        .fontSize(7.8)
         .fillColor('#334155')
-        .text('DIRECCIÓN DE RECURSOS HUMANOS - ANTOFAGASTA', 100, 42)
-        .text(`DEPARTAMENTO: ${personal.nomSucursal || 'CMDS'}`, 100, 53);
+        .text('DIRECCIÓN DE RECURSOS HUMANOS - ANTOFAGASTA', 100, 48)
+        .text(`DEPARTAMENTO: ${personal.nomSucursal || 'CMDS'}`, 100, 58);
 
       const mesNombre = (MESES_NOMBRES[personal.mes] || `MES ${personal.mes}`).toUpperCase();
       doc
@@ -248,7 +259,7 @@ export async function generarPdfLiquidacion(
 
       // 4. Tabla de Haberes y Descuentos (Dos columnas paralelas)
       const tableTop = 208;
-      const tableHeight = 415;
+      const tableHeight = 355;
       const colWidth = 275;
       const leftX = 28;
       const rightX = 309;
@@ -282,7 +293,7 @@ export async function generarPdfLiquidacion(
         .filter((r) => (r.codDescuento && r.codDescuento > 0) || (r.montoDescuento && r.montoDescuento > 0))
         .sort((a, b) => a.codDescuento - b.codDescuento);
 
-      const maxRows = 32;
+      const maxRows = 27;
       const rowH = 11.8;
 
       doc.font('Helvetica').fontSize(7.2).fillColor('#0f172a');
@@ -310,55 +321,79 @@ export async function generarPdfLiquidacion(
       });
 
       // 5. Resumen de Totales y Alcance Líquido
-      const totTop = 630;
+      const totTop = 570;
       doc
-        .roundedRect(28, totTop, 556, 62, 4)
+        .roundedRect(28, totTop, 556, 60, 4)
         .fillAndStroke('#f8fafc', '#64748b');
 
       doc
         .font('Helvetica-Bold')
         .fontSize(8.5)
         .fillColor('#0f172a')
-        .text('TOTAL HABERES:', 38, totTop + 10)
-        .text(`$ ${fmtPesos(personal.totHaberes)}`, 140, totTop + 10, { width: 140, align: 'right' });
+        .text('TOTAL HABERES:', 38, totTop + 9)
+        .text(`$ ${fmtPesos(personal.totHaberes)}`, 140, totTop + 9, { width: 140, align: 'right' });
 
       doc
-        .text('TOTAL DESCUENTOS:', 318, totTop + 10)
-        .text(`$ ${fmtPesos(personal.totDesctos)}`, 430, totTop + 10, { width: 140, align: 'right' });
+        .text('TOTAL DESCUENTOS:', 318, totTop + 9)
+        .text(`$ ${fmtPesos(personal.totDesctos)}`, 430, totTop + 9, { width: 140, align: 'right' });
 
-      doc.moveTo(36, totTop + 26).lineTo(576, totTop + 26).strokeColor('#cbd5e1').stroke();
+      doc.moveTo(36, totTop + 25).lineTo(576, totTop + 25).strokeColor('#cbd5e1').stroke();
 
       // Alcance Líquido destacado
       doc
-        .roundedRect(390, totTop + 31, 186, 25, 4)
+        .roundedRect(390, totTop + 30, 186, 24, 4)
         .fill('#016098');
 
       doc
         .font('Helvetica-Bold')
         .fontSize(9.5)
         .fillColor('#ffffff')
-        .text('LÍQUIDO A PAGO:', 398, totTop + 38)
-        .text(`$ ${fmtPesos(personal.liquidoPago)}`, 480, totTop + 38, { width: 90, align: 'right' });
+        .text('LÍQUIDO A PAGO:', 398, totTop + 37)
+        .text(`$ ${fmtPesos(personal.liquidoPago)}`, 480, totTop + 37, { width: 90, align: 'right' });
 
       const enLetras = numeroALetras(personal.liquidoPago);
       doc
         .font('Helvetica-Bold')
         .fontSize(7.2)
         .fillColor('#334155')
-        .text(`SON: ${enLetras} PESOS.-`, 38, totTop + 36, { width: 345 });
+        .text(`SON: ${enLetras} PESOS.-`, 38, totTop + 35, { width: 345 });
 
-      // 6. Pie de firma y certificación
-      const footTop = 702;
+      // 6. Pie de firma (JEFE DE REMUNERACIONES) y certificación
+      const footTop = 640;
       doc
         .font('Helvetica')
         .fontSize(7)
         .fillColor('#475569')
         .text(
-          'Certifico que he recibido de la Corporación Municipal de Desarrollo Social de Antofagasta, a mi entera satisfacción, el saldo líquido indicado en la presente liquidación, sin tener cargo ni cobro posterior alguno que hacer por los conceptos señalados.',
+          'Certifico que he recibido de la Corporación Municipal de Desarrollo Social de Antofagasta (R.U.T. 71.102.600-2), a mi entera satisfacción, el saldo líquido indicado en la presente liquidación, sin tener cargo ni cobro posterior alguno que hacer por los conceptos señalados.',
           28,
-          footTop,
-          { width: 556, align: 'justify' }
+          footTop + 25,
+          { width: 330, align: 'justify' }
         );
+
+      // Bloque Firma Jefe de Remuneraciones a la derecha
+      if (fs.existsSync(firmaPath)) {
+        try {
+          doc.image(firmaPath, 418, footTop - 4, { width: 120 });
+        } catch {
+          // continuar sin imagen
+        }
+      }
+
+      doc.moveTo(385, footTop + 68).lineTo(575, footTop + 68).strokeColor('#334155').stroke();
+
+      doc
+        .font('Helvetica-Bold')
+        .fontSize(8)
+        .fillColor('#0f172a')
+        .text('JEFE DE REMUNERACIONES', 375, footTop + 72, { width: 205, align: 'center' })
+        .font('Helvetica')
+        .fontSize(6.8)
+        .fillColor('#475569')
+        .text('CORPORACIÓN MUNICIPAL DE DESARROLLO SOCIAL', 375, footTop + 83, {
+          width: 205,
+          align: 'center',
+        });
 
       doc
         .font('Helvetica-Oblique')

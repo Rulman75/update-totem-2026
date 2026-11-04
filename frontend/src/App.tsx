@@ -1852,16 +1852,24 @@ export function App() {
         <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full overflow-hidden max-h-[90vh] flex flex-col">
             <div className="px-6 py-4 bg-[#016098] text-white flex items-center justify-between">
-              <div>
-                <h3 className="font-bold text-base">
-                  Liquidación de Sueldo — {detalleModal?.personal?.periodoFmt || 'Cargando...'}
-                </h3>
-                {detalleModal?.personal && (
-                  <p className="text-xs text-blue-200">
-                    {detalleModal.personal.nombreFmt} ({detalleModal.personal.rutFmt}) ·{' '}
-                    {detalleModal.personal.nomUnidad}
-                  </p>
-                )}
+              <div className="flex items-center gap-3.5">
+                <div className="bg-white rounded-xl px-2.5 py-1.5 flex flex-col items-center shrink-0 shadow-sm">
+                  <img src="/logo.png" alt="CMDS" className="h-7 w-auto object-contain" />
+                  <span className="text-[9px] font-bold text-slate-700 tracking-tight mt-0.5">
+                    R.U.T.: 71.102.600-2
+                  </span>
+                </div>
+                <div>
+                  <h3 className="font-bold text-base">
+                    Liquidación de Sueldo — {detalleModal?.personal?.periodoFmt || 'Cargando...'}
+                  </h3>
+                  {detalleModal?.personal && (
+                    <p className="text-xs text-blue-200">
+                      {detalleModal.personal.nombreFmt} ({detalleModal.personal.rutFmt}) ·{' '}
+                      {detalleModal.personal.nomUnidad}
+                    </p>
+                  )}
+                </div>
               </div>
               <div className="flex items-center gap-2">
                 {detalleModal?.personal && (
@@ -1982,6 +1990,23 @@ export function App() {
                     <span className="font-mono font-extrabold text-lg">
                       $ {Number(detalleModal.personal.liquidoPago).toLocaleString('es-CL')}
                     </span>
+                  </div>
+                </div>
+
+                {/* Pie de firma y certificación */}
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-3 border-t border-slate-200 text-[11px] text-slate-500">
+                  <p className="max-w-md leading-relaxed">
+                    Certifico que he recibido de la{' '}
+                    <strong className="text-slate-700">
+                      Corporación Municipal de Desarrollo Social de Antofagasta (R.U.T. 71.102.600-2)
+                    </strong>{' '}
+                    a mi entera satisfacción el saldo líquido indicado en la presente liquidación.
+                  </p>
+                  <div className="text-center shrink-0 px-6 pt-3 border-t border-slate-400">
+                    <p className="font-bold text-slate-800 tracking-wide">JEFE DE REMUNERACIONES</p>
+                    <p className="text-[10px] text-slate-500">
+                      CORPORACIÓN MUNICIPAL DE DESARROLLO SOCIAL
+                    </p>
                   </div>
                 </div>
               </div>
