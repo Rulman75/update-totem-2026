@@ -255,7 +255,7 @@ export async function generarPdfLiquidacion(
 
       // 4. Tabla de Haberes y Descuentos (Dos columnas paralelas)
       const tableTop = 213;
-      const tableHeight = 415;
+      const tableHeight = 350;
       const colWidth = 275;
       const leftX = 28;
       const rightX = 309;
@@ -289,8 +289,8 @@ export async function generarPdfLiquidacion(
         .filter((r) => (r.codDescuento && r.codDescuento > 0) || (r.montoDescuento && r.montoDescuento > 0))
         .sort((a, b) => a.codDescuento - b.codDescuento);
 
-      const maxRows = 31;
-      const rowH = 12.2;
+      const maxRows = 27;
+      const rowH = 11.8;
 
       doc.font('Helvetica').fontSize(7.2).fillColor('#0f172a');
 
@@ -317,45 +317,45 @@ export async function generarPdfLiquidacion(
       });
 
       // 5. Resumen de Totales y Alcance Líquido
-      const totTop = 636;
+      const totTop = 570;
       doc
-        .roundedRect(28, totTop, 556, 64, 4)
+        .roundedRect(28, totTop, 556, 58, 4)
         .fillAndStroke('#f8fafc', '#64748b');
 
       doc
         .font('Helvetica-Bold')
         .fontSize(8.5)
         .fillColor('#0f172a')
-        .text('TOTAL HABERES:', 38, totTop + 10)
-        .text(`$ ${fmtPesos(personal.totHaberes)}`, 140, totTop + 10, { width: 140, align: 'right' });
+        .text('TOTAL HABERES:', 38, totTop + 9)
+        .text(`$ ${fmtPesos(personal.totHaberes)}`, 140, totTop + 9, { width: 140, align: 'right' });
 
       doc
-        .text('TOTAL DESCUENTOS:', 318, totTop + 10)
-        .text(`$ ${fmtPesos(personal.totDesctos)}`, 430, totTop + 10, { width: 140, align: 'right' });
+        .text('TOTAL DESCUENTOS:', 318, totTop + 9)
+        .text(`$ ${fmtPesos(personal.totDesctos)}`, 430, totTop + 9, { width: 140, align: 'right' });
 
-      doc.moveTo(36, totTop + 26).lineTo(576, totTop + 26).strokeColor('#cbd5e1').stroke();
+      doc.moveTo(36, totTop + 24).lineTo(576, totTop + 24).strokeColor('#cbd5e1').stroke();
 
       // Alcance Líquido destacado
       doc
-        .roundedRect(390, totTop + 32, 186, 26, 4)
+        .roundedRect(390, totTop + 29, 186, 24, 4)
         .fill('#016098');
 
       doc
         .font('Helvetica-Bold')
         .fontSize(9.5)
         .fillColor('#ffffff')
-        .text('LÍQUIDO A PAGO:', 398, totTop + 40)
-        .text(`$ ${fmtPesos(personal.liquidoPago)}`, 480, totTop + 40, { width: 90, align: 'right' });
+        .text('LÍQUIDO A PAGO:', 398, totTop + 36)
+        .text(`$ ${fmtPesos(personal.liquidoPago)}`, 480, totTop + 36, { width: 90, align: 'right' });
 
       const enLetras = numeroALetras(personal.liquidoPago);
       doc
         .font('Helvetica-Bold')
         .fontSize(7.2)
         .fillColor('#334155')
-        .text(`SON: ${enLetras} PESOS.-`, 38, totTop + 36, { width: 345 });
+        .text(`SON: ${enLetras} PESOS.-`, 38, totTop + 34, { width: 345 });
 
-      // 6. Pie de certificación de liquidación (sin firma)
-      const footTop = 710;
+      // 6. Pie de certificación y Firma + Timbre Encargado de Remuneraciones abajo a la derecha
+      const footTop = 634;
       doc
         .font('Helvetica')
         .fontSize(6.8)
@@ -363,9 +363,28 @@ export async function generarPdfLiquidacion(
         .text(
           'Certifico que he recibido de la Corporación Municipal de Desarrollo Social de Antofagasta (R.U.T. 71.102.600-2), a mi entera satisfacción, el saldo líquido indicado en la presente liquidación, sin tener cargo ni cobro posterior alguno que hacer por los conceptos señalados.',
           28,
-          footTop,
-          { width: 556, align: 'justify' }
+          footTop + 28,
+          { width: 335, align: 'justify' }
         );
+
+      if (fs.existsSync(firmaPath)) {
+        try {
+          doc.image(firmaPath, 415, footTop, { width: 130 });
+        } catch {
+          // continuar sin imagen
+        }
+      }
+
+      doc.moveTo(395, footTop + 76).lineTo(565, footTop + 76).strokeColor('#334155').stroke();
+
+      doc
+        .font('Helvetica-Bold')
+        .fontSize(7.5)
+        .fillColor('#0f172a')
+        .text('FIRMA Y TIMBRE OTORGANTE', 385, footTop + 81, {
+          width: 190,
+          align: 'center',
+        });
 
       doc
         .font('Helvetica-Oblique')
@@ -374,7 +393,7 @@ export async function generarPdfLiquidacion(
         .text(
           `Documento emitido electrónicamente a través del Portal del Funcionario CMDS el ${new Date().toLocaleString('es-CL')}.`,
           28,
-          footTop + 26,
+          742,
           { width: 556, align: 'center' }
         );
 

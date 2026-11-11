@@ -1993,15 +1993,27 @@ export function App() {
                   </div>
                 </div>
 
-                {/* Pie de certificación */}
-                <div className="pt-3 border-t border-slate-200 text-[11px] text-slate-500">
-                  <p className="leading-relaxed">
+                {/* Pie de certificación y firma/timbre otorgante */}
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-6 pt-3 border-t border-slate-200 text-[11px] text-slate-500">
+                  <p className="max-w-md leading-relaxed">
                     Certifico que he recibido de la{' '}
                     <strong className="text-slate-700">
                       Corporación Municipal de Desarrollo Social de Antofagasta (R.U.T. 71.102.600-2)
                     </strong>{' '}
                     a mi entera satisfacción el saldo líquido indicado en la presente liquidación, sin tener cargo ni cobro posterior alguno que hacer por los conceptos señalados.
                   </p>
+                  <div className="flex flex-col items-center shrink-0">
+                    <img
+                      src="/firma_gcuevas.png"
+                      alt="Firma y Timbre Encargado Remuneraciones CMDS"
+                      className="h-16 w-auto object-contain mb-1"
+                    />
+                    <div className="border-t border-slate-500 px-6 pt-1 text-center">
+                      <p className="font-bold text-slate-800 text-[10px] tracking-wide">
+                        FIRMA Y TIMBRE OTORGANTE
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
